@@ -1,15 +1,19 @@
+# Import necessary modules
 from PyQt5.QtWidgets import QApplication, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 import sympy as sp
 
-
+# Create a new class Calculator
 class Calculator(QWidget):
+    # Define a constructor method that sets window properties and calls init_ui() to initialize the user interface
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Calculus Calculator')
         self.setFixedSize(400, 400)
         self.init_ui()
-
+    # Define a method to initialize the user interface
     def init_ui(self):
+        
+        # Create QLabel and QLineEdit objects for each input field, and a QLabel object to display the result
         label_func = QLabel('Function f(x):')
         self.edit_func = QLineEdit()
 
@@ -24,7 +28,8 @@ class Calculator(QWidget):
 
         label_result = QLabel('Result:')
         self.result = QLabel('')
-
+        
+        # Create QPushbutton objects for each operation, and connect them to their respective methods
         btn_limit = QPushButton('Calculate Limit')
         btn_limit.clicked.connect(self.calculate_limit)
 
@@ -37,6 +42,7 @@ class Calculator(QWidget):
         btn_integral = QPushButton('Calculate Integral')
         btn_integral.clicked.connect(self.calculate_integral)
 
+        # Add all the widgets to a QVBoxLayout
         vbox = QVBoxLayout()
         vbox.addWidget(label_func)
         vbox.addWidget(self.edit_func)
@@ -52,35 +58,40 @@ class Calculator(QWidget):
         vbox.addWidget(btn_integral)
         vbox.addWidget(label_result)
         vbox.addWidget(self.result)
+        
+        # Set the QVBoxLayout as the layout for the QWidget
         self.setLayout(vbox)
-
+        
+    # Define a method to calculate the limit of a function    
     def calculate_limit(self):
+        
+         # Get the function, variable, and limit point from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
         x0 = self.edit_a.text()
-        while x0 != '':
+        if x0 != '':
         #cannot put the function together because -oo and oo is not float and cannot translate to float
             if x0 == 'oo': #calculate when reach infinity 
                 lim = sp.limit(f, x, x0)
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
-                break
+                
             if x0 == '-oo':
                 lim = sp.limit(f,x,x0)
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
-                break
+                
             else:
                 lim = sp.limit(f, x, float(x0))
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
-                break
-        msg_box = QMessageBox()
-        msg_box.setText("Please enter x0")
-        msg_box.exec_()
+        else:
+            msg_box = QMessageBox()
+            msg_box.setText("Please enter x0")
+            msg_box.exec_()
 
 
     def calculate_derivative(self):
