@@ -84,6 +84,7 @@ class Calculator(QWidget):
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
+                /
 
 
                 x_vals = np.linspace(0.1, 100, 1000)  # x range from 0.1 to 100
