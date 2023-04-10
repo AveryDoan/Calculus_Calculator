@@ -82,7 +82,7 @@ class Calculator(QWidget):
                 # Calculate limit when x approaches infinity
                 lim = sp.limit(f, x, sp.oo)
                 msg_box = QMessageBox()
-                msg_box.setText(f'Limit: {round(lim, 2)}')
+                msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
 
 
@@ -118,7 +118,7 @@ class Calculator(QWidget):
                 # Convert the limit point to float and calculate the limit
                 lim = sp.limit(f, x, float(x0))
                 msg_box = QMessageBox()
-                msg_box.setText(f'Limit: {round(lim, 2)}')
+                msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
 
                 x_vals = np.linspace(float(x0)-1, float(x0)+1, 1000)  # Adjust the x range as needed
@@ -148,7 +148,7 @@ class Calculator(QWidget):
         x = sp.Symbol(self.edit_x.text())
         derivative = sp .diff(f, x)
         msg_box = QMessageBox()
-        msg_box.setText(f'Derivative: {round(derivative, 2)}')
+        msg_box.setText(f'Derivative: {derivative}')
         msg_box.exec_()
 
         x_vals = np.linspace(-10, 10, 1000)  # Adjust the x range as needed
@@ -198,8 +198,8 @@ class Calculator(QWidget):
         if len(extrema) > 0:
             text = " "
             for i in extrema:
-                x_val = round(i[0], 2)
-                y_val = round(f.subs(x, i[0]))
+                x_val = i[0]
+                y_val = f.subs(x, x_val)
                 text += f'Point ({x_val}, {y_val}), Type: {i[1]}\n'
             msg_box.setText(text)
         else:
@@ -268,7 +268,7 @@ class Calculator(QWidget):
         # Display the extremum in a message box
         msg_box = QMessageBox()
         msg_box.setWindowTitle('Extrema')
-        msg_box.setText(f'Extremum: {round(extremum, 2)}')
+        msg_box.setText(f'Extremum: {extremum}')
         msg_box.exec_()
 
 
@@ -303,7 +303,7 @@ class Calculator(QWidget):
         else:
             indefinite_integral = sp.integrate(f, x)
             msg_box = QMessageBox()
-            msg_box.setText(f'Integral: {round(definite_integral, 2)} + C')
+            msg_box.setText(f'Integral: {indefinite_integral} + C')
             msg_box.exec_()
             
             x_vals = np.linspace(-10, 10, 100)
