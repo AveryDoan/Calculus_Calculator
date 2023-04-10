@@ -26,7 +26,7 @@ class Calculator(QWidget):
         label_b = QLabel('Right endpoint b:')
         self.edit_b = QLineEdit()
 
-        label_result = QLabel('Result:')
+        label_result = QLabel('')
         self.result = QLabel('')
         
         # Create QPushbutton objects for each operation, and connect them to their respective methods
@@ -42,6 +42,8 @@ class Calculator(QWidget):
         btn_integral = QPushButton('Calculate Integral')
         btn_integral.clicked.connect(self.calculate_integral)
 
+        btn_gradient = QPushButton('Gradient Descent')
+        btn_gradient.clicked.connect(self.find_extrema_gradient_descent)
 
 
         # Add all the widgets to a QVBoxLayout
@@ -57,6 +59,7 @@ class Calculator(QWidget):
         vbox.addWidget(btn_limit)
         vbox.addWidget(btn_derivative)
         vbox.addWidget(btn_extrema)
+        vbox.addWidget(btn_gradient)
         vbox.addWidget(btn_integral)
         vbox.addWidget(label_result)
         vbox.addWidget(self.result)
@@ -139,8 +142,12 @@ class Calculator(QWidget):
         msg_box.setText('Extrema:')
 
         if len(extrema) > 0:
-            
-            msg_box.setText(str(extrema),join="")
+            text = " "
+            for i in extrema:
+                x_val = i[0]
+                y_val = f.subs(x, x_val)
+                text += f'Point ({x_val}, {y_val}), Type: {i[1]}\n'
+            msg_box.setText(text)
         else:
             msg_box.setText('No extrema found.')
         msg_box.exec_()
@@ -149,20 +156,18 @@ class Calculator(QWidget):
 
     # Define a method to find extrema using gradient descent
     def find_extrema_gradient_descent(self):
-
-        # Get the function, variable, and starting point from the input fields
+        # Get the function, variable, and interval from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
         a = float(self.edit_a.text())
         b = float(self.edit_b.text())
-        x_start = float(self.edit_x_start.text())
 
         # Set the learning rate and maximum number of iterations
         learning_rate = 0.1
         max_iterations = 100
 
         # Initialize the current point and iteration counter
-        x_current = x_start
+        x_current = (a + b) / 2  # Use the midpoint of the interval as the starting point
         iteration = 0
 
         # Perform gradient descent to find the extremum
@@ -188,6 +193,7 @@ class Calculator(QWidget):
         msg_box = QMessageBox()
         msg_box.setWindowTitle('Extrema')
         msg_box.setText(f'Extremum: {extremum}')
+        msg_box.exec_()
 
 
 
@@ -200,14 +206,14 @@ class Calculator(QWidget):
         if (a == '') and (b == ''):
             indefinite_integral = sp.integrate(f, x)
             msg_box = QMessageBox()
-            msg_box.setText(f'Integral: {indefinite_integral}')
+            msg_box.setText(f'Integral: {indefinite_integral} + C')
             msg_box.exec_()
         else:
             a = float(a)
             b = float(b)
             definite_integral = sp.integrate(f, (x, a, b))
             msg_box = QMessageBox()
-            msg_box.setText(f'Integral: {definite_integral}')
+            msg_box.setText(f'Integral: {definite_integral} + C')
             msg_box.exec_()
 
 
