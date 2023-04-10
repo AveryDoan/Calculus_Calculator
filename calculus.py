@@ -137,10 +137,12 @@ class Calculator(QWidget):
         msg_box = QMessageBox()
         msg_box.setWindowTitle('Extrema')
         msg_box.setText('Extrema:')
+
         if len(extrema) > 0:
-            msg_box.setText(str(ext[0])+':'+str(ext[1])for ext in extrema)
+            
+            msg_box.setText(str(extrema),join="")
         else:
-            msg_box.setInformativeText('No extrema found.')
+            msg_box.setText('No extrema found.')
         msg_box.exec_()
 
         # ... (Continuing from the previous code)
