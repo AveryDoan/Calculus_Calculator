@@ -70,41 +70,70 @@ class Calculator(QWidget):
         self.setLayout(vbox)
         
     # Define a method to calculate the limit of a function    
+
     def calculate_limit(self):
-        
-         # Get the function, variable, and limit point from the input fields
+        # Get the function, variable, and limit point from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
         x0 = self.edit_a.text()
+
         if x0 != '':
-        #cannot put the function together because -oo and oo is not float and cannot translate to float
-            if x0 == 'oo': #calculate when reach infinity 
-                lim = sp.limit(f, x, x0)
+            if x0 == 'oo':
+                # Calculate limit when x approaches infinity
+                lim = sp.limit(f, x, sp.oo)
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
-                
-            if x0 == '-oo':
-                lim = sp.limit(f,x,x0)
+
+
+                x_vals = np.linspace(0.1, 100, 1000)  # x range from 0.1 to 100
+                y_vals = np.array([f.subs(x, val) for val in x_vals])
+                plt.plot(x_vals, y_vals, label='Function')
+                plt.xlabel('x')
+                plt.ylabel('f(x)')
+                plt.title('Function Approaching Infinity')
+                plt.legend()
+                plt.show()
+
+
+            elif x0 == '-oo':
+                # Calculate limit when x approaches negative infinity
+                lim = sp.limit(f, x, -sp.oo)
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
-                
+
+                x_vals = np.linspace(0.1, 100, 1000)  # x range from 0.1 to 100
+                y_vals = np.array([f.subs(x, val) for val in x_vals])
+                plt.plot(x_vals, y_vals, label='Function')
+                plt.xlabel('x')
+                plt.ylabel('f(x)')
+                plt.title('Function Approaching Infinity')
+                plt.legend()
+                plt.show()
+
+
+
             else:
-                lim = sp.limit(f, x,x0)
+                # Convert the limit point to float and calculate the limit
+                lim = sp.limit(f, x, float(x0))
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
-               # Plot the function and the limit point
-            x_vals = np.linspace(float(x0)-5, float(x0)+5, 1000)  # Adjust the x range as needed
-            y_vals = np.array([f.subs(x, val) for val in x_vals])
-            plt.plot(x_vals, y_vals, label='Function')
-            plt.plot(float(x0), lim, 'ro', label=f'Limit at x={x0}')  # Plot the limit point
-            plt.xlabel('x')
-            plt.ylabel('f(x)')
-            plt.title('Function and Limit')
-            plt.legend()
-            plt.show()
+
+                x_vals = np.linspace(float(x0)-1, float(x0)+1, 1000)  # Adjust the x range as needed
+                y_vals = np.array([f.subs(x, val) for val in x_vals])
+                plt.plot(x_vals, y_vals, label='Function')
+                plt.plot(float(x0), lim, 'ro', label=f'Limit at x={x0}')  # Plot the limit point
+                plt.xlabel('x')
+                plt.ylabel('f(x)')
+                plt.title('Function and Limit')
+                plt.legend()
+                plt.show()
+
+
+            # Plot the function and the limit point
+
 
         else:
             msg_box = QMessageBox()
