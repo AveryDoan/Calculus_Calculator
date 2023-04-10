@@ -1,6 +1,8 @@
 # Import necessary modules
 from PyQt5.QtWidgets import QApplication, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Create a new class Calculator
 class Calculator(QWidget):
@@ -102,7 +104,7 @@ class Calculator(QWidget):
     def calculate_derivative(self):
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
-        derivative = sp.diff(f, x)
+        derivative = sp .diff(f, x)
         msg_box = QMessageBox()
         msg_box.setText(f'Derivative: {derivative}')
         msg_box.exec_()
@@ -189,12 +191,22 @@ class Calculator(QWidget):
         # Evaluate the function at the final point
         extremum = f.subs(x, x_current)
 
+        # Plot the function along with the gradient descent
+        x_vals = np.linspace(a, b, 1000)
+        y_vals = np.array([f.subs(x, val) for val in x_vals])
+        plt.plot(x_vals, y_vals, label='Function')
+        plt.plot(x_current, extremum, 'ro', label='Extremum') # Mark the extremum point
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+        plt.title('Function and Gradient Descent')
+        plt.legend()
+        plt.show()
+
         # Display the extremum in a message box
         msg_box = QMessageBox()
         msg_box.setWindowTitle('Extrema')
         msg_box.setText(f'Extremum: {extremum}')
         msg_box.exec_()
-
 
 
     def calculate_integral(self):
