@@ -277,19 +277,46 @@ class Calculator(QWidget):
         x = sp.Symbol(self.edit_x.text())
         a = self.edit_a.text()
         b = self.edit_b.text()
-        #have to do separately
-        if (a == '') and (b == ''):
-            indefinite_integral = sp.integrate(f, x)
-            msg_box = QMessageBox()
-            msg_box.setText(f'Integral: {indefinite_integral} + C')
-            msg_box.exec_()
-        else:
+
+        # Check if a and b are provided for definite integral
+        if a and b:
             a = float(a)
             b = float(b)
             definite_integral = sp.integrate(f, (x, a, b))
             msg_box = QMessageBox()
             msg_box.setText(f'Integral: {definite_integral} + C')
             msg_box.exec_()
+
+            # Generate x and y values for graph
+            x_vals = np.linspace(a, b, 100)
+            y_vals = np.array([f.subs(x, val) for val in x_vals])
+
+            # Plot the graph
+            plt.plot(x_vals, y_vals)
+            plt.xlabel('x')
+            plt.ylabel('y')
+            plt.title('Graph of Function')
+            plt.grid(True)
+            plt.show()
+
+        # If a and b are not provided, assume indefinite integral
+        else:
+            indefinite_integral = sp.integrate(f, x)
+            msg_box = QMessageBox()
+            msg_box.setText(f'Integral: {indefinite_integral} + C')
+            msg_box.exec_()
+            
+            x_vals = np.linspace(-10, 10, 100)
+            y_vals = np.array([f.subs(x, val) for val in x_vals])
+
+            # Plot the graph
+            plt.plot(x_vals, y_vals)
+            plt.xlabel('x')
+            plt.ylabel('y')
+            plt.title('Graph of Function')
+            plt.grid(True)
+            plt.show()
+
 
 
        
