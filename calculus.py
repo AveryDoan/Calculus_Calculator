@@ -42,6 +42,8 @@ class Calculator(QWidget):
         btn_integral = QPushButton('Calculate Integral')
         btn_integral.clicked.connect(self.calculate_integral)
 
+
+
         # Add all the widgets to a QVBoxLayout
         vbox = QVBoxLayout()
         vbox.addWidget(label_func)
@@ -101,28 +103,91 @@ class Calculator(QWidget):
         msg_box = QMessageBox()
         msg_box.setText(f'Derivative: {derivative}')
         msg_box.exec_()
+ 
+            # ... (Continuing from the previous code)
 
+    # Define a method to find extrema using derivative
     def find_extrema(self):
+
+        # Get the function and variable from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
-        df = sp.diff(f, x)
-        eqs = [df,]
-        points = sp.solve(eqs, x)
-        hessian = sp.Matrix([[sp.diff(sp.diff(f, x), y) for x in [x]] for y in [x]])
-        for p in points:
-            sub_matrix = hessian.subs(x, p)
-            if sub_matrix.det() > 0:
-                msg_box = QMessageBox()
-                msg_box.setText(f'Local minimum at {p}')
-                msg_box.exec_()
-            elif sub_matrix.det() < 0:
-                msg_box = QMessageBox()
-                msg_box.setText(f'Local maximum at {p}')
-                msg_box.exec_()
+
+        # Calculate the derivative of the function
+        f_prime = f.diff(x)
+
+        # Find critical points by equating the derivative to zero and solving for x
+        critical_points = sp.solve(f_prime, x)
+
+        # Evaluate the second derivative at each critical point
+        extrema = []
+        for point in critical_points:
+            f_double_prime = f_prime.diff(x)
+            second_derivative = f_double_prime.subs(x, point)
+
+            # Determine if it's a maximum or minimum
+            if second_derivative > 0:
+                extrema.append((point, 'Minimum'))
+            elif second_derivative < 0:
+                extrema.append((point, 'Maximum'))
             else:
-                msg_box = QMessageBox()
-                msg_box.setText(f'Cannot determine extrema at {p}')
-                msg_box.exec_()
+                extrema.append((point, 'Unknown'))
+
+        # Display the extrema in a message box
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle('Extrema')
+        msg_box.setText('Extrema:')
+        if len(extrema) > 0:
+            msg_box.setText(str(ext[0])+':'+str(ext[1])for ext in extrema)
+        else:
+            msg_box.setInformativeText('No extrema found.')
+        msg_box.exec_()
+
+        # ... (Continuing from the previous code)
+
+    # Define a method to find extrema using gradient descent
+    def find_extrema_gradient_descent(self):
+
+        # Get the function, variable, and starting point from the input fields
+        f = sp.sympify(self.edit_func.text())
+        x = sp.Symbol(self.edit_x.text())
+        a = float(self.edit_a.text())
+        b = float(self.edit_b.text())
+        x_start = float(self.edit_x_start.text())
+
+        # Set the learning rate and maximum number of iterations
+        learning_rate = 0.1
+        max_iterations = 100
+
+        # Initialize the current point and iteration counter
+        x_current = x_start
+        iteration = 0
+
+        # Perform gradient descent to find the extremum
+        while iteration < max_iterations:
+
+            # Calculate the derivative of the function at the current point
+            f_prime = f.diff(x)
+            f_prime_current = f_prime.subs(x, x_current)
+
+            # Update the current point using the gradient descent formula
+            x_current = x_current - learning_rate * f_prime_current
+
+            # Check if the current point is within the interval [a, b]
+            if x_current < a or x_current > b:
+                break
+
+            iteration += 1
+
+        # Evaluate the function at the final point
+        extremum = f.subs(x, x_current)
+
+        # Display the extremum in a message box
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle('Extrema')
+        msg_box.setText(f'Extremum: {extremum}')
+
+
 
     def calculate_integral(self):
         f = sp.sympify(self.edit_func.text())
@@ -142,6 +207,7 @@ class Calculator(QWidget):
             msg_box = QMessageBox()
             msg_box.setText(f'Integral: {definite_integral}')
             msg_box.exec_()
+
 
        
 if __name__ == '__main__':
