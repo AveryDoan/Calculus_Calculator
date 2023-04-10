@@ -91,14 +91,27 @@ class Calculator(QWidget):
                 msg_box.exec_()
                 
             else:
-                lim = sp.limit(f, x, float(x0))
+                lim = sp.limit(f, x,x0)
                 msg_box = QMessageBox()
                 msg_box.setText(f'Limit: {lim}')
                 msg_box.exec_()
+               # Plot the function and the limit point
+            x_vals = np.linspace(float(x0)-5, float(x0)+5, 1000)  # Adjust the x range as needed
+            y_vals = np.array([f.subs(x, val) for val in x_vals])
+            plt.plot(x_vals, y_vals, label='Function')
+            plt.plot(float(x0), lim, 'ro', label=f'Limit at x={x0}')  # Plot the limit point
+            plt.xlabel('x')
+            plt.ylabel('f(x)')
+            plt.title('Function and Limit')
+            plt.legend()
+            plt.show()
+
         else:
             msg_box = QMessageBox()
             msg_box.setText("Please enter x0")
             msg_box.exec_()
+
+
 
 
     def calculate_derivative(self):
@@ -108,12 +121,22 @@ class Calculator(QWidget):
         msg_box = QMessageBox()
         msg_box.setText(f'Derivative: {derivative}')
         msg_box.exec_()
+
+        x_vals = np.linspace(-10, 10, 1000)  # Adjust the x range as needed
+        y_vals = np.array([f.subs(x, val) for val in x_vals])
+        y_prime_vals = np.array([derivative.subs(x, val) for val in x_vals])  # Calculate the derivative values at each x value
+
+        plt.plot(x_vals, y_vals, label='Function')
+        plt.plot(x_vals, y_prime_vals, label='Derivative')  # Plot the derivative
+        plt.xlabel('x')
+        plt.ylabel('f(x) / f\'(x)')
+        plt.title('Function and Derivative')
+        plt.legend()
+        plt.show()
  
             # ... (Continuing from the previous code)
 
-    # Define a method to find extrema using derivative
     def find_extrema(self):
-
         # Get the function and variable from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
@@ -153,6 +176,17 @@ class Calculator(QWidget):
         else:
             msg_box.setText('No extrema found.')
         msg_box.exec_()
+
+        # Plot the function along with the critical points
+        x_vals = np.linspace(-10, 10, 1000)  # Adjust the x range as needed
+        y_vals = np.array([f.subs(x, val) for val in x_vals])
+        plt.plot(x_vals, y_vals, label='Function')
+        plt.plot(critical_points, [f.subs(x, point) for point in critical_points], 'ro', label='Critical Points') # Mark the critical points
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+        plt.title('Function and Critical Points')
+        plt.legend()
+        plt.show()
 
         # ... (Continuing from the previous code)
 
