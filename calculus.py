@@ -4,6 +4,10 @@ import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 
+import numpy as np
+from scipy.optimize import minimize_scalar, minimize
+from sympy import lambdify
+
 # Create a new class Calculator
 class Calculator(QWidget):
     # Define a constructor method that sets window properties and calls init_ui() to initialize the user interface
@@ -169,55 +173,57 @@ class Calculator(QWidget):
         # Get the function and variable from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
+        
+        # Check if the a and b input fields are empty
+        if not self.edit_a.text() or not self.edit_b.text():
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle('Error')
+            msg_box.setText('Please enter values for a and b.')
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.exec_()
+            return
+        
+        # Get the endpoints a and b
+        a = float(self.edit_a.text())
+        b = float(self.edit_b.text())
 
-        # Calculate the derivative of the function
+        # Convert the sympy expression to a lambda function for numerical computation
+        f_lambda = lambdify(x, f, 'numpy')
+
+        # Define a function for the negative of f, for use in finding maxima
+        f_neg_lambda = lambdify(x, -f, 'numpy')
+
+        # Define a function for the derivative of f
         f_prime = f.diff(x)
+        f_prime_lambda = lambdify(x, f_prime, 'numpy')
 
-        # Find critical points by equating the derivative to zero and solving for x
-        critical_points = sp.solve(f_prime, x)
+        # Find the minima and maxima using scipy.optimize
+        res_min = minimize_scalar(f_lambda, bounds=(a, b), method='bounded')
+        res_max = minimize_scalar(f_neg_lambda, bounds=(a, b), method='bounded')
 
-        # Evaluate the second derivative at each critical point
-        extrema = []
-        for point in critical_points:
-            f_double_prime = f_prime.diff(x)
-            second_derivative = f_double_prime.subs(x, point)
-
-            # Determine if it's a maximum or minimum
-            if second_derivative > 0:
-                extrema.append((point, 'Minimum'))
-            elif second_derivative < 0:
-                extrema.append((point, 'Maximum'))
-            else:
-                extrema.append((point, 'Unknown'))
+        minima = (res_min.x, res_min.fun)
+        maxima = (res_max.x, -res_max.fun)
 
         # Display the extrema in a message box
         msg_box = QMessageBox()
         msg_box.setWindowTitle('Extrema')
         msg_box.setText('Extrema:')
-
-        if len(extrema) > 0:
-            text = " "
-            for i in extrema:
-                x_val = i[0]
-                y_val = f.subs(x, x_val)
-                text += f'Point ({x_val}, {y_val}), Type: {i[1]}\n'
-            msg_box.setText(text)
-        else:
-            msg_box.setText('No extrema found.')
+        text = f'Minimum: {minima}\nMaximum: {maxima}'
+        msg_box.setText(text)
         msg_box.exec_()
 
-        # Plot the function along with the critical points
+        # Plot the function along with the minima and maxima
         x_vals = np.linspace(-10, 10, 1000)  # Adjust the x range as needed
-        y_vals = np.array([f.subs(x, val) for val in x_vals])
+        y_vals = f_lambda(x_vals)
         plt.plot(x_vals, y_vals, label='Function')
-        plt.plot(critical_points, [f.subs(x, point) for point in critical_points], 'ro', label='Critical Points') # Mark the critical points
+        plt.plot(minima[0], minima[1], 'ro', label='Minimum')
+        plt.plot(maxima[0], maxima[1], 'bo', label='Maximum')
         plt.xlabel('x')
         plt.ylabel('f(x)')
-        plt.title('Function and Critical Points')
+        plt.title('Function, Minimum, and Maximum')
         plt.legend()
         plt.show()
 
-        # ... (Continuing from the previous code)
 
     # Define a method to find extrema using gradient descent
     def find_extrema_gradient_descent(self):
@@ -316,9 +322,6 @@ class Calculator(QWidget):
             plt.title('Graph of Function')
             plt.grid(True)
             plt.show()
-
-
-
        
 if __name__ == '__main__':
     app = QApplication([])
