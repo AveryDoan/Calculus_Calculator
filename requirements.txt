@@ -1,2 +1,4 @@
 PyQt5==5.15.7
 sympy==1.11.1
+numpy
+matplotlib
