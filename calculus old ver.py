@@ -169,11 +169,27 @@ class Calculator(QWidget):
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
 
+        if not self.edit_a.text() or not self.edit_b.text():
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle('Error')
+            msg_box.setText('Please enter values for a and b.')
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.exec_()
+            return
+
         # Calculate the derivative of the function
         f_prime = f.diff(x)
 
         # Find critical points by equating the derivative to zero and solving for x
-        critical_points = sp.solve(f_prime, x)
+        roots = sp.solve(f_prime, x)
+
+        critical_points = []
+
+        for i in roots:
+            if not i.is_real:
+                pass
+            else:
+                critical_points.append(i)
 
         # Evaluate the second derivative at each critical point
         extrema = []
@@ -184,7 +200,7 @@ class Calculator(QWidget):
         msg_box.setWindowTitle('Extrema')
         msg_box.setText('Extrema:')
 
-        if len(extrema) > 0:
+        if len(critical_points) > 0:
 
             for point in critical_points:
                 f_double_prime = f_prime.diff(x)
@@ -242,8 +258,19 @@ class Calculator(QWidget):
         # Get the function, variable, and interval from the input fields
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
+
+        if not self.edit_a.text() or not self.edit_b.text():
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle('Error')
+            msg_box.setText('Please enter values for a and b.')
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.exec_()
+            return
+            
         a = float(self.edit_a.text())
         b = float(self.edit_b.text())
+
+
 
         # Set the learning rate and maximum number of iterations
         learning_rate = 0.1
