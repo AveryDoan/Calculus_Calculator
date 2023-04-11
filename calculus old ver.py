@@ -177,17 +177,7 @@ class Calculator(QWidget):
 
         # Evaluate the second derivative at each critical point
         extrema = []
-        for point in critical_points:
-            f_double_prime = f_prime.diff(x)
-            second_derivative = f_double_prime.subs(x, point)
 
-            # Determine if it's a maximum or minimum
-            if second_derivative > 0:
-                extrema.append((point, 'Minimum'))
-            elif second_derivative < 0:
-                extrema.append((point, 'Maximum'))
-            else:
-                extrema.append((point, 'No extrema'))
 
         # Display the extrema in a message box
         msg_box = QMessageBox()
@@ -195,28 +185,57 @@ class Calculator(QWidget):
         msg_box.setText('Extrema:')
 
         if len(extrema) > 0:
+
+            for point in critical_points:
+                f_double_prime = f_prime.diff(x)
+                second_derivative = f_double_prime.subs(x, point)
+
+                # Determine if it's a maximum or minimum
+                if second_derivative > 0:
+                    extrema.append((point, 'Minimum'))
+                elif second_derivative < 0:
+                    extrema.append((point, 'Maximum'))
+                else:
+                    extrema.append((point, 'No extrema'))
+
             text = " "
             for i in extrema:
                 x_val = round(i[0], 2)
                 y_val = round(f.subs(x, i[0]),2)
                 text += f'Point ({x_val}, {y_val}), Type: {i[1]}\n'
             msg_box.setText(text)
+
+            x_vals = np.linspace(-10, 10, 1000)  # Adjust the x range as needed
+            y_vals = np.array([f.subs(x, val) for val in x_vals])
+            plt.plot(x_vals, y_vals, label='Function')
+            plt.plot(critical_points, [f.subs(x, point) for point in critical_points], 'ro', label='Critical Points') # Mark the critical points
+            plt.xlabel('x')
+            plt.ylabel('f(x)')
+            plt.title('Function and Critical Points')
+            plt.legend()
+            plt.show()
+
         else:
             msg_box.setText('No extrema found.')
+
         msg_box.exec_()
 
         # Plot the function along with the critical points
-        x_vals = np.linspace(-10, 10, 1000)  # Adjust the x range as needed
-        y_vals = np.array([f.subs(x, val) for val in x_vals])
+        x_vals = np.linspace(-10, 10, 1000)
+        y_vals = np.array([f.subs('x', val) for val in x_vals])
+
+        # Plot the function
         plt.plot(x_vals, y_vals, label='Function')
-        plt.plot(critical_points, [f.subs(x, point) for point in critical_points], 'ro', label='Critical Points') # Mark the critical points
         plt.xlabel('x')
         plt.ylabel('f(x)')
-        plt.title('Function and Critical Points')
+        plt.title('Function Graph')
         plt.legend()
         plt.show()
 
 
+
+
+        # ... (Continuing from the previous code)
 
     # Define a method to find extrema using gradient descent
     def find_extrema_gradient_descent(self):
