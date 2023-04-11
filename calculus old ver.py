@@ -212,7 +212,7 @@ class Calculator(QWidget):
                 elif second_derivative < 0:
                     extrema.append((point, 'Maximum'))
                 else:
-                    extrema.append((point, 'No extrema'))
+                    extrema.append((point, 'Inflection Point'))
 
             text = " "
             for i in extrema:
