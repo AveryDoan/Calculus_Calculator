@@ -216,7 +216,7 @@ class Calculator(QWidget):
 
             text = " "
             for i in extrema:
-                x_val = i[0], 2
+                x_val = i[0]
                 y_val = f.subs(x, i[0])
                 text += f'Point ({x_val}, {y_val}), Type: {i[1]}\n'
             msg_box.setText(text)
