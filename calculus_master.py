@@ -248,11 +248,6 @@ class Calculator(QWidget):
         plt.legend()
         plt.show()
 
-
-
-
-        # ... (Continuing from the previous code)
-
     # Define a method to find extrema using gradient descent
     def find_extrema_gradient_descent(self):
         # Get the function, variable, and interval from the input fields
