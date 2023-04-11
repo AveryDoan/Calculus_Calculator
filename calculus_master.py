@@ -169,13 +169,13 @@ class Calculator(QWidget):
         f = sp.sympify(self.edit_func.text())
         x = sp.Symbol(self.edit_x.text())
 
-        if not self.edit_a.text() or not self.edit_b.text():
-            msg_box = QMessageBox()
-            msg_box.setWindowTitle('Error')
-            msg_box.setText('Please enter values for a and b.')
-            msg_box.setIcon(QMessageBox.Critical)
-            msg_box.exec_()
-            return
+#         if not self.edit_a.text() or not self.edit_b.text():
+#             msg_box = QMessageBox()
+#             msg_box.setWindowTitle('Error')
+#             msg_box.setText('Please enter values for a and b.')
+#             msg_box.setIcon(QMessageBox.Critical)
+#             msg_box.exec_()
+#             return
 
         # Calculate the derivative of the function
         f_prime = f.diff(x)
