@@ -329,7 +329,7 @@ class Calculator(QWidget):
             b = float(b)
             definite_integral = sp.integrate(f, (x, a, b))
             msg_box = QMessageBox()
-            msg_box.setText(f'Integral: {definite_integral} + C')
+            msg_box.setText(f'Integral: {definite_integral}')
             msg_box.exec_()
 
             # Generate x and y values for graph
