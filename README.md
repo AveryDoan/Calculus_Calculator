@@ -18,27 +18,27 @@ The application window will open with the title "Calculus Calculator" and a fixe
 
     * In the user interface, you will see the following input fields and buttons:
     
-    * "Function f(x)" input field: Enter the mathematical function for which you want to perform the calculations.
+    * "Function f(x)"
     
-    * "Variable x" input field: Enter the variable symbol used in the function.
+    * "Variable x" 
     
-    * "Left endpoint a" input field: Enter the left endpoint value for the calculations that require a range.
+    * "Left endpoint a" 
     
-    * "Right endpoint b" input field: Enter the right endpoint value for the calculations that require a range.
+    * "Right endpoint b"
     
-    * "Calculate Limit" button: Click this button to calculate the limit of the function.
+    * "Calculate Limit" 
     
-    * "Calculate Derivative" button: Click this button to calculate the derivative of the function.
+    * "Calculate Derivative" 
     
-    * "Find Extrema" button: Click this button to find the extrema of the function.
+    * "Find Extrema" 
     
-    * "Gradient Descent" button: Click this button to find the extrema of the function using gradient descent.
+    * "Gradient Descent"
     
-    * "Calculate Integral" button: Click this button to calculate the integral of the function.
+    * "Calculate Integral" 
     
-    * "Result" label: The result of the calculations will be displayed in this label.
+    * "Result" 
     
-Enter the required data in the input fields, and click the appropriate button to perform the desired calculation.
+Enter the required data in the input fields, and click the appropriate button to perform the calculation.
 
 The result of the calculation will be displayed in the "Result" label, and a graphical representation of the function and/or the calculated result may be displayed using Matplotlib.
 
